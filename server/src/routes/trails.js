@@ -1,19 +1,17 @@
-require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
-const authRoutes = require('./routes/auth');
-const trailsRoutes = require('./routes/trails');
+const pool = require('../config/db');
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+const router = express.Router();
 
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok' });
+// GET all trails (empty until we seed data on Day 5)
+router.get('/', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM trails');
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error fetching trails' });
+  }
 });
 
-app.use('/api/auth', authRoutes);
-app.use('/api/trails', trailsRoutes);
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+module.exports = router;
