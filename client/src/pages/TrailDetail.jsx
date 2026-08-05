@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import api from '../api';
+import TrailChat from '../components/TrailChat';
 
 function TrailDetail() {
   const { id } = useParams();
@@ -53,6 +54,8 @@ function TrailDetail() {
           </Marker>
         ))}
       </MapContainer>
+
+      <TrailChat trailId={id} />
     </div>
   );
 }
