@@ -28,4 +28,18 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// GET waypoints for a trail
+router.get('/:id/waypoints', async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT * FROM waypoints WHERE trail_id = $1 ORDER BY order_on_trail ASC',
+      [req.params.id]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error fetching waypoints' });
+  }
+});
+
 module.exports = router;
