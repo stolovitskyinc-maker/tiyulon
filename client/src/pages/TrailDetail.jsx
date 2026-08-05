@@ -10,10 +10,16 @@ function TrailDetail() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    api.get(`/trails/${id}`)
-      .then(res => setTrail(res.data))
-      .catch(() => setError('Could not load trail'))
-      .finally(() => setLoading(false));
+  api.get(`/trails/${id}`)
+    .then(res => setTrail(res.data))
+    .catch(err => {
+      if (err.response && err.response.status === 404) {
+        setError('Trail not found');
+      } else {
+        setError('Could not load trail');
+      }
+    })
+    .finally(() => setLoading(false));
   }, [id]);
 
   if (loading) return <p>Loading trail...</p>;
