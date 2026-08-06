@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import Nav from './components/Nav';
 import TrailList from './pages/TrailList';
 import TrailDetail from './pages/TrailDetail';
 import Login from './pages/Login';
@@ -9,6 +10,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <Nav />
         <Routes>
           <Route path="/" element={<TrailList />} />
           <Route path="/trails/:id" element={<TrailDetail />} />

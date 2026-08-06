@@ -3,13 +3,17 @@ import { useParams } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import api from '../api';
 import TrailChat from '../components/TrailChat';
+import { useAuth } from '../context/AuthContext';
 
 function TrailDetail() {
   const { id } = useParams();
+  const { user } = useAuth();
   const [trail, setTrail] = useState(null);
   const [waypoints, setWaypoints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [favLoading, setFavLoading] = useState(false);
 
   useEffect(() => {
     api.get(`/trails/${id}`)
@@ -28,6 +32,33 @@ function TrailDetail() {
       .catch(() => setWaypoints([]));
   }, [id]);
 
+  useEffect(() => {
+    if (!user) return;
+    api.get('/favorites')
+      .then(res => {
+        const favIds = res.data.map(t => t.id);
+        setIsFavorite(favIds.includes(Number(id)));
+      })
+      .catch(() => {});
+  }, [id, user]);
+
+  const toggleFavorite = async () => {
+    setFavLoading(true);
+    try {
+      if (isFavorite) {
+        await api.delete(`/favorites/${id}`);
+        setIsFavorite(false);
+      } else {
+        await api.post(`/favorites/${id}`);
+        setIsFavorite(true);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setFavLoading(false);
+    }
+  };
+
   if (loading) return <p>Loading trail...</p>;
   if (error) return <p>{error}</p>;
   if (!trail) return <p>Trail not found.</p>;
@@ -37,6 +68,13 @@ function TrailDetail() {
   return (
     <div>
       <h1>{trail.name}</h1>
+
+      {user && (
+        <button onClick={toggleFavorite} disabled={favLoading}>
+          {isFavorite ? '★ Favorited' : '☆ Add to Favorites'}
+        </button>
+      )}
+
       <p>{trail.description}</p>
       <p>Difficulty: {trail.difficulty} | Shade: {trail.shade_level} | Water: {trail.water_sources ? 'Yes' : 'No'}</p>
 
