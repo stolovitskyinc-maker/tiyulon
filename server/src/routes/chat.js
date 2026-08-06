@@ -17,7 +17,6 @@ router.post('/:trailId/chat', async (req, res) => {
       return res.status(400).json({ error: 'Message is required' });
     }
 
-    // Fetch trail + waypoints to build grounded context
     const trailResult = await pool.query('SELECT * FROM trails WHERE id = $1', [trailId]);
     if (trailResult.rows.length === 0) {
       return res.status(404).json({ error: 'Trail not found' });
@@ -46,6 +45,12 @@ Trail info:
 
 Waypoints along this trail:
 ${waypointText}
+
+Flora and fauna on this trail:
+${trail.flora_fauna || 'No specific flora/fauna information available for this trail.'}
+
+Extended history:
+${trail.extended_history || 'No additional historical information available for this trail.'}
 
 Rules:
 - Only answer using the information provided above about this trail.
