@@ -33,12 +33,20 @@ function TrailChat({ trailId }) {
   };
 
   return (
-    <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '1rem', marginTop: '1.5rem' }}>
-      <h3>Ask the Trail Guide</h3>
+    <div style={{
+      background: '#fff',
+      borderRadius: 'var(--radius-card)',
+      boxShadow: 'var(--shadow-card)',
+      padding: '1rem',
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
+    }}>
+      <h3 style={{ fontFamily: "'Poppins', sans-serif", fontSize: '15px', margin: '0 0 10px' }}>Ask the Trail Guide</h3>
 
-      <div style={{ maxHeight: '300px', overflowY: 'auto', marginBottom: '1rem' }}>
+      <div style={{ flex: 1, overflowY: 'auto', marginBottom: '0.75rem' }}>
         {messages.length === 0 && (
-          <p style={{ color: '#888' }}>Ask me anything about this trail's history or details.</p>
+          <p style={{ color: 'var(--color-text-secondary)', fontSize: '13px' }}>Ask me anything about this trail's history or details.</p>
         )}
         {messages.map((m, i) => (
           <div
@@ -51,17 +59,20 @@ function TrailChat({ trailId }) {
             <span
               style={{
                 display: 'inline-block',
-                background: m.role === 'user' ? '#daf1da' : '#f0f0f0',
-                borderRadius: '10px',
+                background: m.role === 'user' ? 'var(--color-lime)' : 'var(--color-badge-bg)',
+                color: 'var(--color-dark)',
+                borderRadius: '14px',
                 padding: '0.5rem 0.8rem',
-                maxWidth: '80%',
+                maxWidth: '85%',
+                fontSize: '13.5px',
+                textAlign: 'left',
               }}
             >
               {m.text}
             </span>
           </div>
         ))}
-        {sending && <p style={{ color: '#888' }}>Thinking...</p>}
+        {sending && <p style={{ color: 'var(--color-text-secondary)', fontSize: '13px' }}>Thinking...</p>}
       </div>
 
       <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -71,10 +82,29 @@ function TrailChat({ trailId }) {
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Ask about this trail..."
-          style={{ flex: 1, padding: '0.5rem' }}
+          style={{
+            flex: 1,
+            padding: '0.6rem 0.8rem',
+            borderRadius: 'var(--radius-pill)',
+            border: '1.5px solid #ddd',
+            fontSize: '13px',
+            outline: 'none',
+          }}
           disabled={sending}
         />
-        <button onClick={sendMessage} disabled={sending}>
+        <button
+          onClick={sendMessage}
+          disabled={sending}
+          style={{
+            background: 'var(--color-lime)',
+            border: 'none',
+            borderRadius: 'var(--radius-pill)',
+            padding: '0.6rem 1.1rem',
+            fontSize: '13px',
+            fontWeight: 600,
+            cursor: 'pointer',
+          }}
+        >
           Send
         </button>
       </div>

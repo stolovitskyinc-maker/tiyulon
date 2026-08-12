@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500&display=swap');
+
+:root {
+  --color-bg: #FAFAF7;
+  --color-dark: #16282A;
+  --color-text-secondary: #5C6D6B;
+  --color-lime: #B4E33D;
+  --color-lime-dark: #8FB82E;
+  --color-card-bg: #FFFFFF;
+  --color-badge-bg: #EAF3DE;
+  --color-badge-text: #3B6D11;
+  --radius-card: 16px;
+  --radius-pill: 20px;
+  --shadow-card: 0 4px 14px rgba(22, 40, 42, 0.08);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--color-dark);
+  background: var(--color-bg);
+  margin: 0;
+}
+
+h1, h2, h3, .heading {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounceDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}

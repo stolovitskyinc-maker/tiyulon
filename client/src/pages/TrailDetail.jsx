@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
+import { Gauge, TreePine, Droplet } from 'lucide-react';
 import api from '../api';
 import TrailChat from '../components/TrailChat';
 import { useAuth } from '../context/AuthContext';
@@ -13,6 +14,13 @@ const startIcon = new L.Icon({
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
   shadowSize: [41, 41],
+});
+
+const waypointIcon = new L.Icon({
+  iconUrl: '/images/icons/waypoint-icon.png',
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
 });
 
 function TrailDetail() {
@@ -69,88 +77,136 @@ function TrailDetail() {
     }
   };
 
-  if (loading) return <p>Loading trail...</p>;
-  if (error) return <p>{error}</p>;
-  if (!trail) return <p>Trail not found.</p>;
+  if (loading) return <p style={{ padding: '1.5rem', textAlign: 'center' }}>Loading trail...</p>;
+  if (error) return <p style={{ padding: '1.5rem', textAlign: 'center' }}>{error}</p>;
+  if (!trail) return <p style={{ padding: '1.5rem', textAlign: 'center' }}>Trail not found.</p>;
 
   const center = [trail.map_center_lat || 31.7683, trail.map_center_lng || 35.2137];
   const path = trail.path || [];
 
+  const pillStyle = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '1.5rem',
+    background: '#fff',
+    border: '1px solid #eee',
+    borderRadius: 'var(--radius-pill)',
+    padding: '0.6rem 1.5rem',
+    boxShadow: 'var(--shadow-card)',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  };
+
+  const infoItem = { display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px' };
+
   return (
-    <div>
-      <h1>{trail.name}</h1>
+    <div style={{ padding: '0 1.5rem 2rem' }}>
+      <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto' }}>
+        <h1 style={{ fontFamily: "'Poppins', sans-serif", fontSize: '26px', margin: '0 0 8px' }}>{trail.name}</h1>
 
-      {user && (
-        <button onClick={toggleFavorite} disabled={favLoading}>
-          {isFavorite ? '★ Favorited' : '☆ Add to Favorites'}
-        </button>
-      )}
+        {user && (
+          <button
+            onClick={toggleFavorite}
+            disabled={favLoading}
+            style={{
+              background: isFavorite ? 'var(--color-lime)' : 'transparent',
+              border: '1.5px solid var(--color-dark)',
+              borderRadius: 'var(--radius-pill)',
+              padding: '6px 18px',
+              fontSize: '13px',
+              fontWeight: 500,
+              cursor: 'pointer',
+              marginBottom: '12px',
+            }}
+          >
+            {isFavorite ? '★ Favorited' : '☆ Add to Favorites'}
+          </button>
+        )}
 
-      <p>{trail.description}</p>
-      <p>Difficulty: {trail.difficulty} | Shade: {trail.shade_level} | Water: {trail.water_sources ? 'Yes' : 'No'}</p>
+        <p style={{ fontSize: '14px', color: 'var(--color-text-secondary)', margin: '0 0 1rem' }}>
+          {trail.description}
+        </p>
 
-      <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', margin: '0.75rem 0', fontSize: '0.9rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <span style={{ display: 'inline-block', width: '28px', height: '4px', backgroundColor: '#FF8C00', opacity: 0.7 }}></span>
-          <span>Main trail</span>
+        <div style={{ marginBottom: '10px' }}>
+          <div style={pillStyle}>
+            <span style={infoItem}><Gauge size={15} color="var(--color-lime-dark)" /> {trail.difficulty}</span>
+            <span style={infoItem}><TreePine size={15} color="var(--color-lime-dark)" /> {trail.shade_level} shade</span>
+            <span style={infoItem}><Droplet size={15} color="var(--color-lime-dark)" /> {trail.water_sources ? 'Water on trail' : 'No water'}</span>
+          </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <span style={{
-            display: 'inline-block',
-            width: '28px',
-            height: '4px',
-            backgroundImage: 'repeating-linear-gradient(to right, #8B5CF6 0, #8B5CF6 6px, transparent 6px, transparent 12px)',
-          }}></span>
-          <span>Extended route (optional, longer)</span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <span style={{
-            display: 'inline-block',
-            width: '14px',
-            height: '14px',
-            borderRadius: '50%',
-            backgroundColor: '#2ecc71',
-            border: '2px solid white',
-            boxShadow: '0 0 0 1px #ccc',
-          }}></span>
-          <span>Trailhead</span>
+
+        <div>
+          <div style={pillStyle}>
+            <span style={infoItem}>
+              <span style={{ width: '20px', height: '3px', background: '#FF8C00', opacity: 0.7, borderRadius: '2px' }}></span>
+              Main trail
+            </span>
+            <span style={infoItem}>
+              <span style={{
+                width: '20px', height: '3px', borderRadius: '2px',
+                backgroundImage: 'repeating-linear-gradient(to right, #8B5CF6 0, #8B5CF6 5px, transparent 5px, transparent 10px)',
+              }}></span>
+              Extended route (optional, longer)
+            </span>
+            <span style={infoItem}>
+              <span style={{ width: '11px', height: '11px', borderRadius: '50%', background: '#2ecc71', border: '2px solid white', boxShadow: '0 0 0 1px #ccc' }}></span>
+              Trailhead
+            </span>
+          </div>
         </div>
       </div>
 
-      <MapContainer center={center} zoom={14} style={{ height: '400px', width: '100%' }}>
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; OpenStreetMap contributors'
-        />
-
-        {path.length > 1 && (
-          <Polyline positions={path} pathOptions={{ color: '#FF8C00', weight: 4, opacity: 0.5 }} />
-        )}
-
-        {trail.extra_path && trail.extra_path.length > 1 && (
-          <Polyline
-            positions={trail.extra_path}
-            pathOptions={{ color: '#8B5CF6', weight: 4, opacity: 0.6, dashArray: '8, 8' }}
+      <div style={{
+        position: 'relative',
+        marginTop: '1.5rem',
+        borderRadius: 'var(--radius-card)',
+        overflow: 'hidden',
+        boxShadow: 'var(--shadow-card)',
+      }}>
+        <MapContainer center={center} zoom={14} style={{ height: '520px', width: '100%' }}>
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; OpenStreetMap contributors'
           />
-        )}
 
-        {path.length > 0 && (
-          <Marker position={path[0]} icon={startIcon}>
-            <Popup><strong>Trailhead</strong> — start here</Popup>
-          </Marker>
-        )}
+          {path.length > 1 && (
+            <Polyline positions={path} pathOptions={{ color: '#FF8C00', weight: 4, opacity: 0.5 }} />
+          )}
 
-        {waypoints.map(wp => (
-          <Marker key={wp.id} position={[wp.lat, wp.lng]}>
-            <Popup>
-              <strong>{wp.name}</strong>
-              <p>{wp.story_text}</p>
-            </Popup>
-          </Marker>
-        ))}
-      </MapContainer>
+          {trail.extra_path && trail.extra_path.length > 1 && (
+            <Polyline
+              positions={trail.extra_path}
+              pathOptions={{ color: '#8B5CF6', weight: 4, opacity: 0.6, dashArray: '8, 8' }}
+            />
+          )}
 
-      <TrailChat trailId={id} />
+          {path.length > 0 && (
+            <Marker position={path[0]} icon={startIcon}>
+              <Popup><strong>Trailhead</strong> — start here</Popup>
+            </Marker>
+          )}
+
+          {waypoints.map(wp => (
+            <Marker key={wp.id} position={[wp.lat, wp.lng]} icon={waypointIcon}>
+              <Popup>
+                <strong>{wp.name}</strong>
+                <p>{wp.story_text}</p>
+              </Popup>
+            </Marker>
+          ))}
+        </MapContainer>
+
+        <div style={{
+          position: 'absolute',
+          top: '16px',
+          right: '16px',
+          bottom: '16px',
+          width: '320px',
+          zIndex: 400,
+        }}>
+          <TrailChat trailId={id} />
+        </div>
+      </div>
     </div>
   );
 }
