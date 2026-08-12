@@ -63,7 +63,7 @@ function Nav() {
           }}
         >
           <Route size={16} color="var(--color-lime-dark)" strokeWidth={2.2} />
-          Trails
+          <span className="nav-trails-text">Trails</span>
         </Link>
 
         {user && (

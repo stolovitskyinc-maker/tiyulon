@@ -48,9 +48,14 @@ h1, h2, h3, .heading {
   .nav-logo-text {
     font-size: 15px !important;
   }
-  .nav-trails-link,
   .nav-user-greeting {
     display: none !important;
+  }
+  .nav-trails-link {
+    padding: 8px 10px !important;
+  }
+  .nav-trails-text {
+    display: none;
   }
   .nav-auth-buttons a,
   .nav-auth-buttons button {
@@ -73,5 +78,25 @@ h1, h2, h3, .heading {
   }
   .hero-subtitle {
     font-size: 14px !important;
+  }
+}
+
+/* Trail detail map/chat responsive */
+@media (max-width: 768px) {
+  .trail-map-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .trail-map-container {
+    height: 320px !important;
+  }
+  .trail-chat-panel {
+    position: static !important;
+    width: 100% !important;
+    height: 380px !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    margin-top: 12px;
   }
 }
