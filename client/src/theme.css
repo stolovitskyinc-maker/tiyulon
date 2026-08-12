@@ -35,3 +35,43 @@ h1, h2, h3, .heading {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(6px); }
 }
+/* Nav responsive */
+.nav-trails-link,
+.nav-user-greeting {
+  display: inline-flex;
+}
+
+@media (max-width: 640px) {
+  .nav-bar {
+    padding: 0.6rem 1rem !important;
+  }
+  .nav-logo-text {
+    font-size: 15px !important;
+  }
+  .nav-trails-link,
+  .nav-user-greeting {
+    display: none !important;
+  }
+  .nav-auth-buttons a,
+  .nav-auth-buttons button {
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+  }
+}
+
+/* Hero responsive */
+.hero-floating-card {
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .hero-floating-card {
+    display: none;
+  }
+  .hero-title {
+    font-size: 30px !important;
+  }
+  .hero-subtitle {
+    font-size: 14px !important;
+  }
+}

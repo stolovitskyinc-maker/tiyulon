@@ -12,7 +12,7 @@ function Nav() {
   };
 
   return (
-    <nav style={{
+    <nav className="nav-bar" style={{
       position: 'absolute',
       top: '16px',
       left: '16px',
@@ -42,12 +42,13 @@ function Nav() {
         }}
       >
         <Mountain size={22} color="var(--color-lime-dark)" strokeWidth={2.2} />
-        Tiyulon
+        <span className="nav-logo-text">Tiyulon</span>
       </Link>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '1.75rem' }}>
         <Link
           to="/trails"
+          className="nav-trails-link"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -66,12 +67,12 @@ function Nav() {
         </Link>
 
         {user && (
-          <span style={{ fontSize: '14px', color: 'var(--color-text-secondary)' }}>
+          <span className="nav-user-greeting" style={{ fontSize: '14px', color: 'var(--color-text-secondary)' }}>
             Hi, {user.name}
           </span>
         )}
 
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div className="nav-auth-buttons" style={{ display: 'flex', gap: '10px' }}>
           {user ? (
             <button
               onClick={handleLogout}

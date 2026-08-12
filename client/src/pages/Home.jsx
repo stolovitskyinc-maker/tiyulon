@@ -30,7 +30,7 @@ function Home() {
       }} />
 
       {/* Floating AI guide preview card */}
-      <div style={{
+      <div className="hero-floating-card" style={{
         position: 'absolute',
         top: '110px',
         right: '5%',
@@ -67,7 +67,7 @@ function Home() {
         width: '100%',
         boxSizing: 'border-box',
       }}>
-        <h1 style={{
+        <h1 className="hero-title" style={{
           fontSize: '42px',
           color: '#fff',
           margin: '0 0 12px',
@@ -76,7 +76,7 @@ function Home() {
         }}>
           Hike smarter,<br />explore further
         </h1>
-        <p style={{
+        <p className="hero-subtitle" style={{
           color: '#fff',
           fontSize: '16px',
           margin: '0 0 22px',
