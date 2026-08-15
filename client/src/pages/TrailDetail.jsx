@@ -156,14 +156,14 @@ function TrailDetail() {
         </div>
       </div>
 
-      <div style={{
+      <div className="trail-map-wrapper" style={{
         position: 'relative',
         marginTop: '1.5rem',
         borderRadius: 'var(--radius-card)',
         overflow: 'hidden',
         boxShadow: 'var(--shadow-card)',
       }}>
-        <MapContainer center={center} zoom={14} style={{ height: '520px', width: '100%' }}>
+        <MapContainer className="trail-map-container" center={center} zoom={14} style={{ height: '520px', width: '100%' }}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; OpenStreetMap contributors'
@@ -196,7 +196,7 @@ function TrailDetail() {
           ))}
         </MapContainer>
 
-        <div style={{
+        <div className="trail-chat-panel" style={{
           position: 'absolute',
           top: '16px',
           right: '16px',
