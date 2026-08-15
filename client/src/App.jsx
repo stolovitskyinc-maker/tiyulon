@@ -8,8 +8,6 @@ import TrailDetail from './pages/TrailDetail';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Contact from './pages/Contact';
-// ...
-<Route path="/contact" element={<Contact />} />
 
 function AppRoutes() {
   const location = useLocation();
@@ -23,6 +21,7 @@ function AppRoutes() {
         <Route path="/trails/:id" element={<TrailDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/contact" element={<Contact />} />
       </Routes>
     </div>
   );
@@ -39,6 +38,5 @@ function App() {
     </AuthProvider>
   );
 }
-
 
 export default App;
