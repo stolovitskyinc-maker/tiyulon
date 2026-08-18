@@ -31,3 +31,5 @@ function Footer() {
 }
 
 export default Footer;
+
+//fixed the footer title
