@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api';
+import TrailFinder from '../components/TrailFinder';
 
 const bgPositions = {
   1: 'center',
@@ -12,6 +13,8 @@ function TrailList() {
   const [trails, setTrails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showFinder, setShowFinder] = useState(true);
+  const [highlightedId, setHighlightedId] = useState(null);
 
   useEffect(() => {
     api.get('/trails')
@@ -20,17 +23,36 @@ function TrailList() {
       .finally(() => setLoading(false));
   }, []);
 
+  const handleRecommend = (trailId) => {
+    setShowFinder(false);
+    setHighlightedId(trailId);
+  };
+
+  const handleSkip = () => {
+    setShowFinder(false);
+  };
+
   if (loading) return <p style={{ padding: '1.5rem' }}>Loading trails...</p>;
   if (error) return <p style={{ padding: '1.5rem' }}>{error}</p>;
 
   return (
     <div style={{ padding: '1.5rem' }}>
+      {showFinder && (
+        <TrailFinder onRecommend={handleRecommend} onSkip={handleSkip} />
+      )}
+
       <h2 style={{ textAlign: 'center', fontSize: '22px', margin: '0 0 4px' }}>
         Choose a trail that fits you
       </h2>
       <p style={{ textAlign: 'center', color: 'var(--color-text-secondary)', fontSize: '13px', margin: '0 0 1.5rem' }}>
         From easy family walks to longer historical routes
       </p>
+
+      {highlightedId && (
+        <p style={{ textAlign: 'center', fontSize: '13px', color: 'var(--color-lime-dark)', fontWeight: 600, margin: '0 0 1rem' }}>
+          Based on your answers, we think this one's a great fit ↓
+        </p>
+      )}
 
       {trails.length === 0 ? (
         <p style={{ textAlign: 'center' }}>No trails yet.</p>
@@ -49,8 +71,11 @@ function TrailList() {
               <div style={{
                 background: 'var(--color-card-bg)',
                 borderRadius: 'var(--radius-card)',
-                boxShadow: 'var(--shadow-card)',
+                boxShadow: trail.id === highlightedId
+                  ? '0 0 0 3px var(--color-lime), var(--shadow-card)'
+                  : 'var(--shadow-card)',
                 overflow: 'hidden',
+                transition: 'box-shadow 0.3s ease',
               }}>
                 <div style={{
                   height: '150px',
