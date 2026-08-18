@@ -134,7 +134,7 @@ function Home() {
               Explore trails
             </Link>
             <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '12.5px', margin: '14px 0 0' }}>
-              3 curated trails · Judean Desert & Galilee
+              3 curated trails · 29 stories along the way · Judean Desert & Galilee
             </p>
           </div>
         </div>

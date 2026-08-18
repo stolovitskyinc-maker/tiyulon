@@ -8,7 +8,7 @@ function Footer() {
       textAlign: 'center',
     }}>
       <Link
-        to="/contact"
+        to="/Contact us"
         style={{
           display: 'inline-block',
           textDecoration: 'none',
@@ -21,7 +21,7 @@ function Footer() {
           marginBottom: '10px',
         }}
       >
-        Contact
+        Contact us
       </Link>
       <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', margin: 0 }}>
         © {new Date().getFullYear()} Tiyulon. Built for families exploring Israel's trails.

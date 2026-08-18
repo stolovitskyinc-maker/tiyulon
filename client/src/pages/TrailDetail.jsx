@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
-import { Gauge, TreePine, Droplet } from 'lucide-react';
+import { Gauge, TreePine, Droplet, Heart } from 'lucide-react';
 import api from '../api';
 import TrailChat from '../components/TrailChat';
 import { useAuth } from '../context/AuthContext';
@@ -108,18 +108,23 @@ function TrailDetail() {
           <button
             onClick={toggleFavorite}
             disabled={favLoading}
+            aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
             style={{
-              background: isFavorite ? 'var(--color-lime)' : 'transparent',
-              border: '1.5px solid var(--color-dark)',
-              borderRadius: 'var(--radius-pill)',
-              padding: '6px 18px',
-              fontSize: '13px',
-              fontWeight: 500,
+              background: 'transparent',
+              border: 'none',
               cursor: 'pointer',
               marginBottom: '12px',
+              padding: '6px',
+              display: 'inline-flex',
+              transition: 'transform 0.15s ease',
             }}
           >
-            {isFavorite ? '★ Favorited' : '☆ Add to Favorites'}
+            <Heart
+              size={26}
+              color={isFavorite ? '#E63946' : '#999'}
+              fill={isFavorite ? '#E63946' : 'none'}
+              strokeWidth={1.8}
+            />
           </button>
         )}
 
