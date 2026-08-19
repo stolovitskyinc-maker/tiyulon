@@ -7,6 +7,7 @@ const chatRoutes = require('./routes/chat');
 const favoritesRoutes = require('./routes/favorites');
 const recommendRoutes = require('./routes/recommend');
 const contactRoutes = require('./routes/contact');
+const completedRoutes = require('./routes/completed');
 
 const app = express();
 app.use(cors());
@@ -22,6 +23,7 @@ app.use('/api/recommend', recommendRoutes);
 app.use('/api/trails', chatRoutes);
 app.use('/api/favorites', favoritesRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/completed', completedRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

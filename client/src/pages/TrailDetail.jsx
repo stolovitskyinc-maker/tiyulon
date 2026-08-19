@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
-import { Gauge, TreePine, Droplet, Heart } from 'lucide-react';
+import { Gauge, TreePine, Droplet, Heart, CheckCircle, Navigation } from 'lucide-react';
 import api from '../api';
 import TrailChat from '../components/TrailChat';
 import { useAuth } from '../context/AuthContext';
@@ -32,6 +32,8 @@ function TrailDetail() {
   const [error, setError] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const [favLoading, setFavLoading] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [completeLoading, setCompleteLoading] = useState(false);
 
   useEffect(() => {
     api.get(`/trails/${id}`)
@@ -60,6 +62,16 @@ function TrailDetail() {
       .catch(() => {});
   }, [id, user]);
 
+  useEffect(() => {
+    if (!user) return;
+    api.get('/completed')
+      .then(res => {
+        const completedIds = res.data.map(t => t.id);
+        setIsCompleted(completedIds.includes(Number(id)));
+      })
+      .catch(() => {});
+  }, [id, user]);
+
   const toggleFavorite = async () => {
     setFavLoading(true);
     try {
@@ -74,6 +86,23 @@ function TrailDetail() {
       console.error(err);
     } finally {
       setFavLoading(false);
+    }
+  };
+
+  const toggleCompleted = async () => {
+    setCompleteLoading(true);
+    try {
+      if (isCompleted) {
+        await api.delete(`/completed/${id}`);
+        setIsCompleted(false);
+      } else {
+        await api.post(`/completed/${id}`);
+        setIsCompleted(true);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setCompleteLoading(false);
     }
   };
 
@@ -105,28 +134,59 @@ function TrailDetail() {
         <h1 style={{ fontFamily: "'Poppins', sans-serif", fontSize: '26px', margin: '0 0 8px' }}>{trail.name}</h1>
 
         {user && (
-          <button
-            onClick={toggleFavorite}
-            disabled={favLoading}
-            aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              cursor: 'pointer',
-              marginBottom: '12px',
-              padding: '6px',
-              display: 'inline-flex',
-              transition: 'transform 0.15s ease',
-            }}
-          >
-            <Heart
-              size={26}
-              color={isFavorite ? '#E63946' : '#999'}
-              fill={isFavorite ? '#E63946' : 'none'}
-              strokeWidth={1.8}
-            />
-          </button>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '12px' }}>
+            <button
+              onClick={toggleFavorite}
+              disabled={favLoading}
+              aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+              style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: '6px', display: 'inline-flex' }}
+            >
+              <Heart size={26} color={isFavorite ? '#E63946' : '#999'} fill={isFavorite ? '#E63946' : 'none'} strokeWidth={1.8} />
+            </button>
+
+            <button
+              onClick={toggleCompleted}
+              disabled={completeLoading}
+              style={{
+                background: isCompleted ? 'var(--color-lime)' : 'transparent',
+                border: '1.5px solid var(--color-dark)',
+                borderRadius: 'var(--radius-pill)',
+                padding: '6px 16px',
+                fontSize: '13px',
+                fontWeight: 500,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+              }}
+            >
+              <CheckCircle size={15} />
+              {isCompleted ? 'Hiked' : 'Mark as hiked'}
+            </button>
+          </div>
         )}
+
+        
+          href={`https://www.google.com/maps/dir/?api=1&destination=${center[0]},${center[1]}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            textDecoration: 'none',
+            color: 'var(--color-dark)',
+            border: '1.5px solid #ddd',
+            borderRadius: 'var(--radius-pill)',
+            padding: '6px 16px',
+            fontSize: '13px',
+            fontWeight: 500,
+            marginBottom: '12px',
+          }}
+        >
+          <Navigation size={14} color="var(--color-lime-dark)" />
+          Get directions
+        </a>
 
         <p style={{ fontSize: '14px', color: 'var(--color-text-secondary)', margin: '0 0 1rem' }}>
           {trail.description}
