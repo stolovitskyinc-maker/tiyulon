@@ -34,7 +34,7 @@ Rules:
 - Only use the trail information given above. Never invent details or discuss trails not listed here.
 - Write a short, friendly 2-3 sentence recommendation explaining why this trail fits what they described.
 - End your message with this exact marker on its own line: [[RECOMMEND:ID]] where ID is that trail's numeric ID from the list above.
-- Do not show the marker format to the user in any other way.
+- Do not show the marker format to the user in any other way.`;
 
     const claudeMessages = messages.map(m => ({
       role: m.role === 'assistant' ? 'assistant' : 'user',
