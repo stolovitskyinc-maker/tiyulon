@@ -112,6 +112,7 @@ function TrailDetail() {
 
   const center = [trail.map_center_lat || 31.7683, trail.map_center_lng || 35.2137];
   const path = trail.path || [];
+  const directionsTarget = path.length > 0 ? path[0] : center;
 
   const pillStyle = {
     display: 'inline-flex',
@@ -166,8 +167,8 @@ function TrailDetail() {
           </div>
         )}
 
-        
-          href={`https://www.google.com/maps/dir/?api=1&destination=${center[0]},${center[1]}`}
+        <a
+          href={`https://www.google.com/maps/dir/?api=1&destination=${directionsTarget[0]},${directionsTarget[1]}`}
           target="_blank"
           rel="noopener noreferrer"
           style={{
@@ -183,7 +184,7 @@ function TrailDetail() {
             fontWeight: 500,
             marginBottom: '12px',
           }}
-        <a>
+        >
           <Navigation size={14} color="var(--color-lime-dark)" />
           Get directions
         </a>
