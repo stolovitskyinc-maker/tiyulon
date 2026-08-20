@@ -67,9 +67,18 @@ function Nav() {
         </Link>
 
         {user && (
-          <span className="nav-user-greeting" style={{ fontSize: '14px', color: 'var(--color-text-secondary)' }}>
+          <Link
+            to="/my-trails"
+            className="nav-user-greeting"
+            style={{
+              fontSize: '14px',
+              color: 'var(--color-dark)',
+              textDecoration: 'none',
+              fontWeight: 500,
+            }}
+          >
             Hi, {user.name}
-          </span>
+          </Link>
         )}
 
         <div className="nav-auth-buttons" style={{ display: 'flex', gap: '10px' }}>

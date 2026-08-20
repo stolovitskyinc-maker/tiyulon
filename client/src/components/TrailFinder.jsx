@@ -34,6 +34,35 @@ const QUESTIONS = [
   },
 ];
 
+const TRAIL_PROFILES = {
+  1: { name: 'Ein Gedi — Nahal David', region: 'Judean Desert', water: 'Yes', kids: 'Yes', time: 'Under 1.5 hours', interest: 'Nature' },
+  2: { name: "Beit She'arim National Park", region: 'Galilee', water: 'No', kids: 'No', time: 'More than 2.5 hours', interest: 'History' },
+  3: { name: 'Nahal Tzipori', region: 'Galilee', water: 'Yes', kids: 'Yes', time: '1.5–2.5 hours', interest: 'Both' },
+};
+
+function getFallbackTrailId(answers) {
+  const scores = { 1: 0, 2: 0, 3: 0 };
+
+  Object.entries(TRAIL_PROFILES).forEach(([id, profile]) => {
+    if (answers.region === profile.region || answers.region === 'No preference') scores[id] += 1;
+    if (answers.water === profile.water || answers.water === "Doesn't matter") scores[id] += 1;
+    if (answers.kids === profile.kids) scores[id] += 1;
+    if (answers.time === profile.time) scores[id] += 1;
+    if (answers.interest === profile.interest || profile.interest === 'Both') scores[id] += 1;
+  });
+
+  let bestId = 1;
+  let bestScore = -1;
+  Object.entries(scores).forEach(([id, score]) => {
+    if (score > bestScore) {
+      bestScore = score;
+      bestId = parseInt(id, 10);
+    }
+  });
+
+  return bestId;
+}
+
 function TrailFinder({ onRecommend, onSkip }) {
   const [messages, setMessages] = useState([
     { role: 'assistant', content: QUESTIONS[0].prompt }
@@ -78,7 +107,13 @@ Please recommend the best trail for me.`;
           setTimeout(() => onRecommend(res.data.recommendedTrailId), 1400);
         }
       } catch (err) {
-        setMessages(prev => [...prev, { role: 'assistant', content: "Sorry, something went wrong. Please try again." }]);
+        const fallbackId = getFallbackTrailId(updatedAnswers);
+        const fallbackName = TRAIL_PROFILES[fallbackId].name;
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: `I couldn't reach the trail guide just now, but based on what you told me, ${fallbackName} looks like a strong match for you!`
+        }]);
+        setTimeout(() => onRecommend(fallbackId), 1400);
       } finally {
         setSending(false);
       }

@@ -8,6 +8,7 @@ import TrailDetail from './pages/TrailDetail';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Contact from './pages/Contact';
+import MyTrails from './pages/MyTrails';
 
 function AppRoutes() {
   const location = useLocation();
@@ -22,6 +23,7 @@ function AppRoutes() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/my-trails" element={<MyTrails />} />
       </Routes>
     </div>
   );
