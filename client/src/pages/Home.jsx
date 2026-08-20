@@ -60,9 +60,50 @@ function Home() {
           zIndex: 1,
         }} />
 
+        {/* Trail Finder preview card */}
         <div className="hero-floating-card" style={{
           position: 'absolute',
-          top: '110px',
+          top: '120px',
+          right: '5%',
+          zIndex: 2,
+          background: 'rgba(255,255,255,0.92)',
+          backdropFilter: 'blur(6px)',
+          borderRadius: 'var(--radius-card)',
+          boxShadow: '0 8px 30px rgba(22,40,42,0.25)',
+          padding: '14px 16px',
+          maxWidth: '250px',
+          animation: 'fadeSlideUp 0.7s ease-out 0.2s both',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+            <div style={{
+              width: '28px', height: '28px', borderRadius: '50%',
+              background: 'var(--color-lime)', display: 'flex',
+              alignItems: 'center', justifyContent: 'center', fontSize: '14px',
+            }}>🧭</div>
+            <span style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: '12.5px', color: 'var(--color-dark)' }}>
+              Find Your Trail
+            </span>
+          </div>
+          <p style={{ fontSize: '12px', color: '#5C6D6B', margin: '0 0 6px', lineHeight: 1.5 }}>
+            Hiking with kids? Want water access?
+          </p>
+          <span style={{
+            display: 'inline-block',
+            background: 'var(--color-badge-bg)',
+            color: 'var(--color-badge-text)',
+            fontSize: '11px',
+            fontWeight: 600,
+            padding: '4px 10px',
+            borderRadius: '12px',
+          }}>
+            → We'll match you with a trail
+          </span>
+        </div>
+
+        {/* Trail Guide preview card */}
+        <div className="hero-floating-card" style={{
+          position: 'absolute',
+          top: '250px',
           right: '5%',
           zIndex: 2,
           background: 'rgba(255,255,255,0.92)',

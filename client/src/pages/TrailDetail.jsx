@@ -183,7 +183,7 @@ function TrailDetail() {
             fontWeight: 500,
             marginBottom: '12px',
           }}
-        >
+        <a>
           <Navigation size={14} color="var(--color-lime-dark)" />
           Get directions
         </a>
