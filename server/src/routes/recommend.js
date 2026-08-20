@@ -30,10 +30,11 @@ router.post('/', async (req, res) => {
 ${trailSummaries}
 
 Rules:
-- Ask at most 2 short, simple clarifying questions (e.g. how much time they have, whether they're with young kids, whether they prefer nature or history) — one question at a time, not a list.
+- The user's message will already contain their full preferences (region, difficulty, water, kids/stroller, time, and interest in history vs. nature). Do not ask any clarifying questions.
 - Only use the trail information given above. Never invent details or discuss trails not listed here.
-- Once you have enough information, recommend exactly ONE trail. End your final message with this exact marker on its own line: [[RECOMMEND:ID]] where ID is that trail's numeric ID from the list above.
-- Do not show the marker format to the user in any other way, and only include it once you are making your final recommendation, not during clarifying questions.`;
+- Write a short, friendly 2-3 sentence recommendation explaining why this trail fits what they described.
+- End your message with this exact marker on its own line: [[RECOMMEND:ID]] where ID is that trail's numeric ID from the list above.
+- Do not show the marker format to the user in any other way.
 
     const claudeMessages = messages.map(m => ({
       role: m.role === 'assistant' ? 'assistant' : 'user',
