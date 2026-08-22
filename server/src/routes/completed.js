@@ -2,8 +2,6 @@ const express = require('express');
 const pool = require('../config/db');
 const requireAuth = require('../middleware/auth');
 
-console.log('>>> completed.js file loaded');
-
 const router = express.Router();
 
 router.get('/', requireAuth, async (req, res) => {

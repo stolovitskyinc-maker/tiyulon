@@ -11,11 +11,6 @@ const completedRoutes = require('./routes/completed');
 
 const app = express();
 
-app.use((req, res, next) => {
-  console.log('>>> Incoming request:', req.method, req.originalUrl);
-  next();
-});
-
 app.use(cors());
 app.use(express.json());
 
@@ -31,6 +26,5 @@ app.use('/api/favorites', favoritesRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/completed', completedRoutes);
 
-console.log('>>> All routes registered, including /api/completed');
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
