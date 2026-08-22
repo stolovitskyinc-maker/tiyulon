@@ -8,6 +8,7 @@ const favoritesRoutes = require('./routes/favorites');
 const recommendRoutes = require('./routes/recommend');
 const contactRoutes = require('./routes/contact');
 const completedRoutes = require('./routes/completed');
+const waypointPhotosRoutes = require('./routes/waypointPhotos');
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use('/api/trails', chatRoutes);
 app.use('/api/favorites', favoritesRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/completed', completedRoutes);
+app.use('/api/waypoint-photos', waypointPhotosRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

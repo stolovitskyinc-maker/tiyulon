@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
-import { Gauge, TreePine, Droplet, Heart, CheckCircle, Navigation } from 'lucide-react';
+import { Gauge, TreePine, Droplet, Heart, CheckCircle, Navigation, Camera, X } from 'lucide-react';
 import api from '../api';
 import TrailChat from '../components/TrailChat';
 import { useAuth } from '../context/AuthContext';
@@ -23,6 +23,95 @@ const waypointIcon = new L.Icon({
   popupAnchor: [0, -32],
 });
 
+function WaypointPopup({ wp, photo, canUpload, onPhotoChange }) {
+  const [uploading, setUploading] = useState(false);
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 1_500_000) {
+      alert('Please choose a smaller image (under ~1.5MB).');
+      return;
+    }
+
+    setUploading(true);
+    const reader = new FileReader();
+    reader.onload = async () => {
+      try {
+        await api.post(`/waypoint-photos/${wp.id}`, { imageData: reader.result });
+        onPhotoChange(wp.id, reader.result);
+      } catch (err) {
+        console.error(err);
+        alert('Could not upload photo. Please try again.');
+      } finally {
+        setUploading(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemove = async () => {
+    try {
+      await api.delete(`/waypoint-photos/${wp.id}`);
+      onPhotoChange(wp.id, null);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return (
+    <div style={{ minWidth: '180px' }}>
+      {photo && (
+        <div style={{ position: 'relative', marginBottom: '6px' }}>
+          <img
+            src={photo}
+            alt={wp.name}
+            style={{ width: '100%', maxWidth: '220px', borderRadius: '8px', display: 'block' }}
+          />
+          <button
+            onClick={handleRemove}
+            aria-label="Remove photo"
+            style={{
+              position: 'absolute', top: '4px', right: '4px',
+              background: 'rgba(0,0,0,0.6)', border: 'none', borderRadius: '50%',
+              width: '22px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer',
+            }}
+          >
+            <X size={12} color="#fff" />
+          </button>
+        </div>
+      )}
+
+      <strong>{wp.name}</strong>
+      <p>{wp.story_text}</p>
+
+      {canUpload && !photo && (
+        <label style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '5px',
+          fontSize: '12px',
+          color: 'var(--color-lime-dark)',
+          cursor: 'pointer',
+          fontWeight: 600,
+        }}>
+          <Camera size={14} />
+          {uploading ? 'Uploading...' : 'Add your photo'}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            disabled={uploading}
+            style={{ display: 'none' }}
+          />
+        </label>
+      )}
+    </div>
+  );
+}
+
 function TrailDetail() {
   const { id } = useParams();
   const { user } = useAuth();
@@ -34,6 +123,7 @@ function TrailDetail() {
   const [favLoading, setFavLoading] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [completeLoading, setCompleteLoading] = useState(false);
+  const [photos, setPhotos] = useState({});
 
   useEffect(() => {
     api.get(`/trails/${id}`)
@@ -71,6 +161,29 @@ function TrailDetail() {
       })
       .catch(() => {});
   }, [id, user]);
+
+  useEffect(() => {
+    if (!user) return;
+    api.get(`/waypoint-photos/trail/${id}`)
+      .then(res => {
+        const photoMap = {};
+        res.data.forEach(p => { photoMap[p.waypoint_id] = p.image_data; });
+        setPhotos(photoMap);
+      })
+      .catch(() => {});
+  }, [id, user]);
+
+  const handlePhotoChange = (waypointId, imageData) => {
+    setPhotos(prev => {
+      const updated = { ...prev };
+      if (imageData) {
+        updated[waypointId] = imageData;
+      } else {
+        delete updated[waypointId];
+      }
+      return updated;
+    });
+  };
 
   const toggleFavorite = async () => {
     setFavLoading(true);
@@ -167,7 +280,13 @@ function TrailDetail() {
           </div>
         )}
 
-        <a
+        {isCompleted && (
+          <p style={{ fontSize: '12px', color: 'var(--color-lime-dark)', margin: '0 0 10px' }}>
+            📸 You've hiked this trail — tap a waypoint on the map to add your own photo!
+          </p>
+        )}
+
+        
           href={`https://www.google.com/maps/dir/?api=1&destination=${directionsTarget[0]},${directionsTarget[1]}`}
           target="_blank"
           rel="noopener noreferrer"
@@ -255,8 +374,12 @@ function TrailDetail() {
           {waypoints.map(wp => (
             <Marker key={wp.id} position={[wp.lat, wp.lng]} icon={waypointIcon}>
               <Popup>
-                <strong>{wp.name}</strong>
-                <p>{wp.story_text}</p>
+                <WaypointPopup
+                  wp={wp}
+                  photo={photos[wp.id]}
+                  canUpload={isCompleted && !!user}
+                  onPhotoChange={handlePhotoChange}
+                />
               </Popup>
             </Marker>
           ))}
