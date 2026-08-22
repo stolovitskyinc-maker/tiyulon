@@ -25,5 +25,6 @@ app.use('/api/favorites', favoritesRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/completed', completedRoutes);
 
+console.log('>>> All routes registered, including /api/completed');
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
