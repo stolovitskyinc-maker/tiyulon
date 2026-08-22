@@ -10,6 +10,12 @@ const contactRoutes = require('./routes/contact');
 const completedRoutes = require('./routes/completed');
 
 const app = express();
+
+app.use((req, res, next) => {
+  console.log('>>> Incoming request:', req.method, req.originalUrl);
+  next();
+});
+
 app.use(cors());
 app.use(express.json());
 
